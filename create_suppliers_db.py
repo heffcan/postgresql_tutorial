@@ -17,7 +17,7 @@ def create_tables():
     commands = (
             """
             CREATE TABLE vendors (
-                vendor_id SERAL PRIMARY KEY,
+                vendor_id SERIAL PRIMARY KEY,
                 vendor_name VARCHAR(255) NOT NULL
             )
             """,
@@ -36,6 +36,7 @@ def create_tables():
                 FOREIGN KEY (part_id)
                 REFERENCES parts (part_id)
                 ON UPDATE CASCADE ON DELETE CASCADE
+            )
             """,
             """
             CREATE TABLE vendor_parts (
@@ -47,7 +48,7 @@ def create_tables():
                     ON UPDATE CASCADE ON DELETE CASCADE,
                 FOREIGN KEY (part_id)
                     REFERENCES parts (part_id)
-                    ON UPDATE CASCASE ON DELETE CASCADE
+                    ON UPDATE CASCADE ON DELETE CASCADE
             )
             """)
     conn = None
@@ -58,7 +59,9 @@ def create_tables():
         print("Connecting to server via params:\n".format(params))
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
+        print("Executing commands:")
         for command in commands:
+            print(command)
             cur.execute(command)
         # close communication with database server
         cur.close()
@@ -67,6 +70,7 @@ def create_tables():
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
+        print("Done!!")
         if conn is not None:
             conn.close()
 
